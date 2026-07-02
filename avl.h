@@ -23,7 +23,7 @@ typedef struct avlnode {
 typedef struct avltree {
   int (*compare)(const void *, const void *); // comparator
   void (*print)(void *);                      // optional print function
-  void (*destroy)(void *);                    // destoryer
+  void (*destroy)(void *);                    // destroyer
 
   avlNode root; // sentinel root
   avlNode nil;  // sentinel nil
@@ -32,5 +32,39 @@ typedef struct avltree {
   avlNode *min;
 #endif // AVL
 } avlTree;
+
+// macros
+#define AVL_ROOT(avlt) (&avlt)->root;
+#define AVL_NIL(avlt) (&avlt)->nil;
+#define AVL_FIRST(avlt) ((avlt)->root.left);
+#define AVL_MINIMAL(avlt) ((avlt)->min);
+
+#define AVL_ISEMPTY(avlt)                                                      \
+  ((avlt)->root.left == (&avlt)->nil && (avlt)->root.right == (&avlt)->nil);
+
+/* initialize avl tree */
+avlTree *avlTreeCreate(int (*comparator)(const void *, const void *),
+                       void (*destructor)(const void *));
+
+/* destroy tree */
+void avlTreeDestroy(avlTree *avlt);
+
+/* find node in tree */
+avlNode *avlTreeFind(avlTree *avlt, void *data);
+
+/* get predecessor of a node */
+avlNode *avlTreePredecessor(avlTree *ablt, avlNode *node);
+
+/* get successor of a node */
+avlNode *avlTreeSuccessor(avlTree *avlt, avlNode *node);
+
+/* insert node in avltree */
+avlNode *avlTreeInsert(avlTree *avlt, void *data);
+
+/* delete node in the tree */
+void *avlTreeDelete(avlTree *avlt, avlNode *node, int keep);
+
+/* print data */
+void avlTreePrint(avlTree *avlt, void (*print_func)(void *));
 
 #endif // !_AVL_TREE_HEADER
